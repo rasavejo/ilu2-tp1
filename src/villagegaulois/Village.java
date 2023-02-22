@@ -1,7 +1,5 @@
 package villagegaulois;
 
-import java.util.Arrays;
-
 import personnages.Chef;
 import personnages.Gaulois;
 
@@ -46,7 +44,8 @@ public class Village {
 		return null;
 	}
 
-	public String afficherVillageois() {
+	public String afficherVillageois() throws VillageSansChefException {
+		if (chef == null) throw new VillageSansChefException("Le village n'a pas de chef");
 		StringBuilder chaine = new StringBuilder();
 		if (nbVillageois < 1) {
 			chaine.append("Il n'y a encore aucun habitant au village du chef "
@@ -66,13 +65,15 @@ public class Village {
 		marche.utiliserEtal(numeroEtal,vendeur,produit,nbProduit);
 		StringBuilder chaine = new StringBuilder();
 		chaine.append(vendeur.getNom() 
-				+ "cherche un endroit pour vendre "
+				+ " cherche un endroit pour vendre "
 				+ nbProduit
 				+ " "
 				+ produit
 				+ ". Le vendeur "
 				+ vendeur.getNom()
-				+ "des fleurs à l'étal n°"
+				+ " vend des "
+				+ produit
+				+ " a l'etal n "
 				+ numeroEtal
 				+ ".");
 		return chaine.toString();
@@ -90,6 +91,14 @@ public class Village {
 	
 	public Etal rechercherEtal(Gaulois vendeur) {
 		return marche.trouverVendeur(vendeur);
+	}
+	
+	public String partirVendeur(Gaulois vendeur) {
+		return rechercherEtal(vendeur).libererEtal();
+	}
+	
+	public String afficherMarche() {
+		return marche.afficherMarche();
 	}
 	
 	private static class Marche {
@@ -131,16 +140,16 @@ public class Village {
 		
 		public String afficherMarche() {
 			int nbEtalVide = 0;
-			String affichage = "";
+			StringBuilder affichage = new StringBuilder();
 			for (int i = 0;i<etals.length;i++) 
-				if (etals[i].isEtalOccupe()) affichage += etals[i].afficherEtal();
+				if (etals[i].isEtalOccupe()) affichage.append(etals[i].afficherEtal());
 				else nbEtalVide ++;
 			if (nbEtalVide != 0) { 
-				affichage += "Il reste "
+				affichage.append( "Il reste "
 						  + nbEtalVide
-						  + "étals non utilisés dans le marché.\n";
+						  + " etals non utilises dans le marche.\n");
 			}
-			return affichage;
+			return affichage.toString();
 		}
 	}
 }

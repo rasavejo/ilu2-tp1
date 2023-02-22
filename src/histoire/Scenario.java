@@ -5,6 +5,7 @@ import personnages.Druide;
 import personnages.Gaulois;
 import villagegaulois.Etal;
 import villagegaulois.Village;
+import villagegaulois.VillageSansChefException;
 
 public class Scenario {
 
@@ -32,12 +33,40 @@ public class Scenario {
 		System.out.println(village.installerVendeur(druide, "fleurs", 10));
 
 		System.out.println(village.rechercherVendeursProduit("fleurs"));
-//		Etal etalFleur = village.rechercherEtal(bonemine);
-//		System.out.println(etalFleur.acheterProduit(10, abraracourcix));
-//		System.out.println(etalFleur.acheterProduit(15, obelix));
-//		System.out.println(etalFleur.acheterProduit(15, assurancetourix));
-//		System.out.println(village.partirVendeur(bonemine));
-//		System.out.println(village.afficherMarche());
+		Etal etalFleur = village.rechercherEtal(bonemine);
+		
+		System.out.println(etalFleur.acheterProduit(10, abraracourcix));
+		System.out.println(etalFleur.acheterProduit(15, obelix));
+		System.out.println(etalFleur.acheterProduit(15, assurancetourix));
+		
+		try {
+			etalFleur.acheterProduit(-5, obelix);
+		} catch (IllegalArgumentException e) {
+			System.out.println("Nombre d'achat négatif");
+		}
+		
+		Etal etal = new Etal();
+		try {
+			etal.acheterProduit(5, obelix);
+		} catch (IllegalStateException e) {
+			System.out.println("Etal vide");
+		}
+		
+		
+		System.out.println(village.partirVendeur(bonemine));
+		System.out.println(village.afficherMarche());
+		
+		try {
+		System.out.println(village.afficherVillageois());
+		} catch (VillageSansChefException e) {
+			System.out.println("Le village n'a pas de chef");
+		}
+		
+		Village villageTest = new Village("village",50,10);
+		try {
+		System.out.println(villageTest.afficherVillageois());
+		} catch (VillageSansChefException e) {
+			System.out.println("Le village n'a pas de chef");
+		}
 	}
-
 }
